@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "330770634026",
+    "project_id": "firesttest-d13c6",
+    "storage_bucket": "firesttest-d13c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330770634026:android:e1120e2074bbce66dfba53",
+        "android_client_info": {
+          "package_name": "com.novasaz.firebase_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi4QoIozuuyZQGUQqtUlOow4pFnOIxysw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
