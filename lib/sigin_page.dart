@@ -26,9 +26,26 @@ class _SignInPageState extends State<SignInPage> {
           stream: _auth.authStateChanges(),
           builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Column(
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              );
             } else if (snapshot.hasData) {
-              return Center(child: Text('Welcome, ${snapshot.data!.email}'));
+              return Column(
+                children: [
+                  Center(
+                    child: Text('Welcome, ${snapshot.data!.email}'),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        _auth.signOut();
+                      },
+                      child: Text('sgin out'))
+                ],
+              );
             } else {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
