@@ -1,105 +1,87 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class ReadUp extends StatefulWidget {
+  const ReadUp({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<ReadUp> createState() => _ReadUpState();
 }
 
-class _SignInPageState extends State<SignInPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? _errorMessage;
+class _ReadUpState extends State<ReadUp> {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  late CollectionReference users;
+
+  @override
+  void initState() {
+    super.initState();
+    users = _db.collection('users');
+  }
+
+  Future<void> addUser() async {
+    try {
+      await users.add({
+        'user': 'darbaz',
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User added successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add user: $e')),
+      );
+    }
+  }
+
+   
+
+  Future<void> setUser() async {
+    try {
+      await users.doc('18nc3kXIE5TtjVg1x93J').set({
+        'user': 'navid',
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User added successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add user: $e')),
+      );
+    }
+  }
+
+  Future<void> updateUser() async {
+    try {
+      await users.doc('18nc3kXIE5TtjVg1x93J').update({
+        'user': 'sdfghbj',
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User updated successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update user: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: const Text('ReadUp App'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<User?>(
-          stream: _auth.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Column(
-                children: [
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasData) {
-              return Column(
-                children: [
-                  Center(
-                    child: Text('Welcome, ${snapshot.data!.email}'),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        _auth.signOut();
-                      },
-                      child: Text('sgin out'))
-                ],
-              );
-            } else {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      errorText: _errorMessage,
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      errorText: _errorMessage,
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 12.0),
-                  TextButton(
-                    onPressed: _signIn,
-                    child: Text('Login'),
-                  ),
-                ],
-              );
-            }
-          },
+      body: Container(
+        color: Colors.white,
+        child: Center(
+          child: TextButton(
+            onPressed: () async {
+              await updateUser();
+            },
+            child: const Text('Add User'),
+          ),
         ),
       ),
     );
-  }
-
-  Future<void> _signIn() async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      setState(() {
-        _errorMessage = null;
-      });
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _errorMessage = e.message;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }
