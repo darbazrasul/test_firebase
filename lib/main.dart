@@ -14,8 +14,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home:SignInPage(),
-    );
+    return  MaterialApp(
+      title: 'Admin Dashboard',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+
+      ),
+      home:const AdminDashboard(),    );
+
   }
 }
